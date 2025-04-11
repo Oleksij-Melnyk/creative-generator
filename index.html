@@ -2,39 +2,57 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Проект</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700..900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создание креатива</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <input type="file" id="imageInput" accept="image/*">
+    <div class="left-panel">
+      <div class="upload-block">
+        <label for="imageInput">Загрузить картинку</label>
+        <input type="file" id="imageInput" accept="image/*">
+      </div>      
+      <h1>СОЗДАНИЕ КРЕАТИВА</h1>
+      <div class="selectors">
+        <div class="dropdown-block">
+          <label for="geoSelect">Выбери гео</label>
+          <select id="geoSelect">
+            <option>Geo1</option>
+            <option>Geo2</option>
+            <option>Geo3</option>
+          </select>
+        </div>
+        <div class="dropdown-block">
+          <label for="currencySelect">Выбери валюту</label>
+          <select id="currencySelect">
+            <option>USD1</option>
+            <option>USD2</option>
+            <option>USD3</option>
+          </select>
+        </div>
+      </div>
 
-    <div class="text-controls">
-      <input type="number" id="fontSizeInput" min="10" max="200" value="50">
-      <input type="text" id="textInput" placeholder="PROMOCODE">
-      <button id="applyTextBtn">СОЗДАТЬ КРЕАТИВ</button>
+      <div class="promo-block">
+        <label for="textSizeInput">Размер текста</label>
+        <input type="number" id="textSizeInput" placeholder="50" min="10" max="200">
+        
+        <label for="textInput">Введи промокод</label>
+        <input type="text" id="textInput" placeholder="PROMOCODE">
+        
+        <button id="applyTextBtn">СОЗДАТЬ КРЕАТИВ</button>
+        <button id="skewButton">НАКЛОН: 0°</button>
+      </div>
     </div>
 
-    <div class="select-controls">
-      <select id="geoSelect">
-        <option>Geo1</option>
-        <option>Geo2</option>
-        <option>Geo3</option>
-      </select>
-
-      <select id="currencySelect">
-        <option>USD1</option>
-        <option>USD2</option>
-        <option>USD3</option>
-      </select>
-
-      <button id="angleBtn">0°</button>
+    <div class="right-panel">
+      <h2>ПРЕДПРОСМОТР</h2>
+      <canvas id="canvas" width="500" height="500"></canvas>
+      <button id="downloadBtn">СКАЧАТЬ</button>
     </div>
-
-    <button id="downloadBtn">СКАЧАТЬ</button>
-    <canvas id="canvas"></canvas>
   </div>
+  
   <script src="scripts.js"></script>
 </body>
 </html>

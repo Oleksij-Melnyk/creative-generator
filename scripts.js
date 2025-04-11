@@ -1,8 +1,7 @@
-const imageInput = document.getElementById('imageInput');
 const textInput = document.getElementById('textInput');
-const fontSizeInput = document.getElementById('fontSizeInput');
+const fontSizeInput = document.getElementById('textSizeInput');
 const applyTextBtn = document.getElementById('applyTextBtn');
-const angleBtn = document.getElementById('angleBtn');
+const angleBtn = document.getElementById('skewButton');
 const downloadBtn = document.getElementById('downloadBtn');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -14,30 +13,10 @@ let currentAngle = 0;
 const angles = [0, 0.93, 3, 4.05];
 let angleIndex = 0;
 
-window.onload = () => {
-  image.src = 'assets/banner.png';
-  image.onload = () => {
-    canvas.width = image.width;
-    canvas.height = image.height;
-    drawCanvas();
-  };
+image.src = 'assets/banner.png';
+image.onload = () => {
+  drawCanvas();
 };
-
-imageInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = event => {
-      image.onload = () => {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        drawCanvas();
-      };
-      image.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
 
 applyTextBtn.addEventListener('click', () => {
   currentText = textInput.value.toUpperCase();
@@ -48,34 +27,41 @@ applyTextBtn.addEventListener('click', () => {
 angleBtn.addEventListener('click', () => {
   angleIndex = (angleIndex + 1) % angles.length;
   currentAngle = angles[angleIndex];
-  angleBtn.textContent = `${currentAngle}°`;
+  angleBtn.textContent = `НАКЛОН: ${currentAngle}°`;
   drawCanvas();
 });
 
 downloadBtn.addEventListener('click', () => {
   const link = document.createElement('a');
-  link.download = 'image.png';
+  link.download = 'creative.png';
   link.href = canvas.toDataURL();
   link.click();
 });
 
 function drawCanvas() {
-  if (!image.src) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, 0, 0);
+  const scale = Math.min(canvas.width / image.width, canvas.height / image.height);
+  const scaledWidth = image.width * scale;
+  const scaledHeight = image.height * scale;
+  const offsetX = (canvas.width - scaledWidth) / 2;
+  const offsetY = (canvas.height - scaledHeight) / 2;
+
+  ctx.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
 
   if (currentText) {
     const radians = currentAngle * Math.PI / 180;
     const skewValue = Math.tan(radians);
 
-    const centerX = 360;
-    const centerY = 575;
+    const originalX = 360;
+    const originalY = 575;
+    const targetX = offsetX + originalX * scale;
+    const targetY = offsetY + originalY * scale;
 
     ctx.save();
-    ctx.translate(centerX, centerY);
+    ctx.translate(targetX, targetY);
     ctx.transform(1, 0, skewValue, 1, 0, 0);
     ctx.rotate(-radians);
-    ctx.font = `900 italic ${currentFontSize}px Inter`;
+    ctx.font = `900 italic ${currentFontSize * scale}px Inter`;
     ctx.fillStyle = '#4F5900';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
