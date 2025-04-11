@@ -36,7 +36,8 @@
 
       <div class="promo-block">
         <label for="textSizeInput">Размер текста</label>
-        <input type="number" id="textSizeInput" placeholder="50" min="10" max="200">
+        <!-- Начальное значение шрифта равно 45 -->
+        <input type="number" id="textSizeInput" value="45" placeholder="45" min="10" max="200">
         
         <label for="textInput">Введи промокод</label>
         <input type="text" id="textInput" placeholder="PROMOCODE">
@@ -48,11 +49,12 @@
 
     <div class="right-panel">
       <h2>ПРЕДПРОСМОТР</h2>
+      <!-- На экране показываем canvas 500x500 -->
       <canvas id="canvas" width="500" height="500"></canvas>
       <button id="downloadBtn">СКАЧАТЬ</button>
     </div>
   </div>
   
-  <script src="scripts.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
