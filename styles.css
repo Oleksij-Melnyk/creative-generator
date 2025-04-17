@@ -67,3 +67,21 @@ canvas {
   background-color: white;
   margin-top: 15px;
 }
+
+.login-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  /* При желании можно добавить фоновую подложку, отступы и т.д. */
+  z-index: 999; 
+}
+
+.login-wrapper button {
+  padding: 10px 15px;
+  /* Можно изменить фон и стили для кнопки под ваш вкус */
+  background-color: #4F5900;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

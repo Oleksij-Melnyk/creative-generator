@@ -1,38 +1,44 @@
 const textInput = document.getElementById('textInput');
 const fontSizeInput = document.getElementById('textSizeInput');
-const applyTextBtn = document.getElementById('applyTextBtn');
 const angleBtn = document.getElementById('skewButton');
 const downloadBtn = document.getElementById('downloadBtn');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
 const geoSelect = document.getElementById('geoSelect');
 const currencySelect = document.getElementById('currencySelect');
 
+let currentFontSize = (window.adminConfig && window.adminConfig.text_size) ? parseInt(window.adminConfig.text_size) : 45;
+let currentAngle = (window.adminConfig && window.adminConfig.skew_angle) ? parseFloat(window.adminConfig.skew_angle) : 0;
+const angles = (window.adminConfig && window.adminConfig.angles) ? window.adminConfig.angles : [0, 0.93, 3, 4.05];
+const originalX = (window.adminConfig && window.adminConfig.position_x) ? window.adminConfig.position_x : 360;
+const originalY = (window.adminConfig && window.adminConfig.position_y) ? window.adminConfig.position_y : 575;
+const fontWeight = (window.adminConfig && window.adminConfig.font_weight) ? window.adminConfig.font_weight : 900;
+const defaultTextColor = (window.adminConfig && window.adminConfig.text_color) ? window.adminConfig.text_color : '#4F5900';
+const defaultTextAlign = (window.adminConfig && window.adminConfig.text_alignment) ? window.adminConfig.text_alignment : 'center';
+
 let currentText = '';
-let currentFontSize = 45; // Начальное значение = 45
-let currentAngle = 0;
-const angles = [0, 0.93, 3, 4.05];
-let angleIndex = 0;
 
 let image = new Image();
-image.crossOrigin = "anonymous"; // Если сервер поддерживает CORS.
+image.crossOrigin = "anonymous";
 image.src = 'assets/banner.png';
 image.onload = () => {
-  // Устанавливаем значение поля размера текста по умолчанию
   fontSizeInput.value = currentFontSize;
-  drawCanvas(); // Отрисовываем на основном canvas (500x500)
+  drawCanvas();
 };
 
-applyTextBtn.addEventListener('click', () => {
+function updateCanvas() {
   currentText = textInput.value.trim().toUpperCase();
-  currentFontSize = parseInt(fontSizeInput.value, 10) || 45;
+  currentFontSize = parseInt(fontSizeInput.value, 10) || currentFontSize;
   drawCanvas();
-});
+}
+
+textInput.addEventListener('input', updateCanvas);
+fontSizeInput.addEventListener('input', updateCanvas);
 
 angleBtn.addEventListener('click', () => {
-  angleIndex = (angleIndex + 1) % angles.length;
-  currentAngle = angles[angleIndex];
+  let index = angles.indexOf(currentAngle);
+  index = (index + 1) % angles.length;
+  currentAngle = angles[index];
   angleBtn.textContent = `НАКЛОН: ${currentAngle}°`;
   drawCanvas();
 });
@@ -41,12 +47,6 @@ downloadBtn.addEventListener('click', () => {
   downloadCanvasImage();
 });
 
-/**
- * Функция для отрисовки креатива на заданном canvas.
- * @param {CanvasRenderingContext2D} context - контекст рисования.
- * @param {number} cw - ширина canvas.
- * @param {number} ch - высота canvas.
- */
 function drawOnCanvas(context, cw, ch) {
   context.clearRect(0, 0, cw, ch);
   const scale = Math.min(cw / image.width, ch / image.height);
@@ -55,17 +55,11 @@ function drawOnCanvas(context, cw, ch) {
   const offsetX = (cw - scaledWidth) / 2;
   const offsetY = (ch - scaledHeight) / 2;
 
-  // Рисуем изображение
   context.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
 
-  // Рисуем промокод, если он введён
   if (currentText) {
     const radians = currentAngle * Math.PI / 180;
     const skewValue = Math.tan(radians);
-
-    // Координаты для размещения текста относительно изображения
-    const originalX = 360;
-    const originalY = 575;
     const targetX = offsetX + originalX * scale;
     const targetY = offsetY + originalY * scale;
 
@@ -73,9 +67,9 @@ function drawOnCanvas(context, cw, ch) {
     context.translate(targetX, targetY);
     context.transform(1, 0, skewValue, 1, 0, 0);
     context.rotate(-radians);
-    context.font = `900 italic ${currentFontSize * scale}px Inter`;
-    context.fillStyle = '#4F5900';
-    context.textAlign = 'center';
+    context.font = `${fontWeight} italic ${currentFontSize * scale}px Inter`;
+    context.fillStyle = defaultTextColor;
+    context.textAlign = defaultTextAlign;
     context.textBaseline = 'middle';
     context.fillText(currentText, 0, 0);
     context.restore();
@@ -86,21 +80,14 @@ function drawCanvas() {
   drawOnCanvas(ctx, canvas.width, canvas.height);
 }
 
-/**
- * Функция для скачивания изображения.
- * Создаётся оффскрин canvas размером 1000x1000, на который отрисовывается контент,
- * затем получается dataURL и инициируется скачивание файла.
- */
 function downloadCanvasImage() {
   const offscreenCanvas = document.createElement('canvas');
   offscreenCanvas.width = 1000;
   offscreenCanvas.height = 1000;
   const offscreenCtx = offscreenCanvas.getContext('2d');
 
-  // Отрисовываем креатив на оффскрин canvas с разрешением 1000x1000
   drawOnCanvas(offscreenCtx, offscreenCanvas.width, offscreenCanvas.height);
 
-  // Формируем имя файла в формате: PROMOCODE_GEO_VAL.png
   const promoCode = (currentText || textInput.value.trim().toUpperCase() || 'PROMOCODE');
   const geoVal = geoSelect.value.trim().toUpperCase();
   const currencyVal = currencySelect.value.trim().toUpperCase();

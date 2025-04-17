@@ -1,0 +1,73 @@
+<?php
+$configFile = 'admin_configs.json';
+$configData = [];
+if (file_exists($configFile)) {
+    $configData = json_decode(file_get_contents($configFile), true);
+}
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создание креатива</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="login-wrapper">
+    <button onclick="location.href='login.php'">Login</button>
+    </div>
+
+
+    <div class="left-panel">
+      <div class="upload-block">
+        <label for="imageInput">Загрузить картинку</label>
+        <input type="file" id="imageInput" accept="image/*">
+      </div>      
+      <h1>СОЗДАНИЕ КРЕАТИВА</h1>
+      <div class="selectors">
+        <div class="dropdown-block">
+          <label for="geoSelect">Выбери гео</label>
+          <select id="geoSelect">
+            <option>Geo1</option>
+            <option>Geo2</option>
+            <option>Geo3</option>
+          </select>
+        </div>
+        <div class="dropdown-block">
+          <label for="currencySelect">Выбери валюту</label>
+          <select id="currencySelect">
+            <option>USD1</option>
+            <option>USD2</option>
+            <option>USD3</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="promo-block">
+        <label for="textSizeInput">Размер текста</label>
+        <input type="number" id="textSizeInput" value="45" placeholder="45" min="10" max="200">
+        
+        <label for="textInput">Введи промокод</label>
+        <input type="text" id="textInput" placeholder="PROMOCODE">
+        
+
+        <button id="skewButton">НАКЛОН: 0°</button>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h2>ПРЕДПРОСМОТР</h2>
+      <canvas id="canvas" width="500" height="500"></canvas>
+      <button id="downloadBtn">СКАЧАТЬ</button>
+    </div>
+  </div>
+  
+  <script>
+    window.adminConfig = <?php echo json_encode($configData); ?>;
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

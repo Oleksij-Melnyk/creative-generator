@@ -1,0 +1,24 @@
+{
+    "Banner_Casino-1.png": {
+        "custom_image": "uploads/Banner_Casino-1.png",
+        "text_size": 45,
+        "skew_angle": 1,
+        "text_alignment": "center",
+        "text_color": "#b30f0f",
+        "position_x": 750,
+        "position_y": 470,
+        "width": 300,
+        "height": 100
+    },
+    "97604.png": {
+        "custom_image": "uploads/97604.png",
+        "text_size": 63,
+        "skew_angle": 0,
+        "text_alignment": "right",
+        "text_color": "#a9ab1c",
+        "position_x": 574,
+        "position_y": 761,
+        "width": 450,
+        "height": 100
+    }
+}
