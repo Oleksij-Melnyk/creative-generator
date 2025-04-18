@@ -19,7 +19,6 @@
   let image = new Image();
   image.crossOrigin = 'anonymous';
 
-  // Rectangle parameters (center-based)
   let rect = {
       x: config.position_x || 0,
       y: config.position_y || 0,
@@ -46,7 +45,6 @@
     const { scale, offsetX, offsetY } = getScaleOffsets();
     ctx.drawImage(image, offsetX, offsetY, image.width * scale, image.height * scale);
 
-    // Determine angle properly, without fallback overriding zero
     let angle = parseFloat(angleInput.value);
     if (isNaN(angle)) {
       angle = (typeof config.skew_angle === 'number' ? config.skew_angle : 0);
@@ -56,7 +54,6 @@
     const centerX  = offsetX + rect.x * scale;
     const centerY  = offsetY + rect.y * scale;
 
-    // Draw skewed rectangle
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.transform(1, 0, skewValue, 1, 0, 0);
@@ -65,7 +62,6 @@
     ctx.fillRect(-rect.width/2 * scale, -rect.height/2 * scale, rect.width * scale, rect.height * scale);
     ctx.restore();
 
-    // Draw text over rectangle
     const text = (textInput.value.trim() || '').toUpperCase();
     if (text) {
       ctx.save();
@@ -98,7 +94,6 @@
     };
   }
 
-  // Mouse down: start drag if inside rectangle bounds
   canvasEl.addEventListener('mousedown', e => {
     const { scale, offsetX, offsetY } = getScaleOffsets();
     const m = toCanvasCoords(e);
@@ -112,7 +107,6 @@
     }
   });
 
-  // Mouse move: update rectangle center and inputs
   window.addEventListener('mousemove', e => {
     if (!isDragging) return;
     const { scale, offsetX, offsetY } = getScaleOffsets();
@@ -127,23 +121,19 @@
     draw();
   });
 
-  // Mouse up: stop dragging
   window.addEventListener('mouseup', () => {
     isDragging = false;
   });
 
-  // On image load: initialize inputs and draw
   image.onload = () => {
     posXInput.value   = rect.x;
     posYInput.value   = rect.y;
     widthInput.value  = config.width || rect.width;
     heightInput.value = config.height || rect.height;
-    // Initialize angle input to config if empty
     if (!angleInput.value) angleInput.value = config.skew_angle || 0;
     draw();
   };
 
-  // File selection: load new image
   fileInput.addEventListener('change', () => {
     const f = fileInput.files[0];
     if (!f) return;
@@ -153,7 +143,6 @@
     reader.readAsDataURL(f);
   });
 
-  // On any input change: update rect params and redraw
   [textInput, sizeInput, angleInput, alignSelect, colorInput,
    posXInput, posYInput, widthInput, heightInput]
     .forEach(el => el.addEventListener('input', () => {
@@ -164,7 +153,6 @@
       draw();
     }));
 
-  // Load initial image if set
   if (config.custom_image) image.src = config.custom_image;
 })();
 

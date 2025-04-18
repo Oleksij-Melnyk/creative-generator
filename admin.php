@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </form>
     </div>
     <div class="right-panel">
-      <canvas id="canvas" width="800" height="600"></canvas>
+      <canvas id="canvas" width="600" height="600"></canvas>
     </div>
   </div>
 
